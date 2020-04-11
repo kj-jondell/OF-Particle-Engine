@@ -22,6 +22,5 @@ public:
   void gotMessage(ofMessage msg);
 
 private:
-  int N_PARTICLES = 10;
-  Particle *particles;
+  vector<Particle> particles;
 };

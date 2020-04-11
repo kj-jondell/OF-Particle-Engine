@@ -1,47 +1,50 @@
+/*
+ *
+ *
+ * Simple particle engine
+ *
+ * TODO: - collision detection
+ * - in-elastic bounce (elastic bounce...)
+ *
+ */
 #include "ofApp.h"
+#include <cstdlib>
 #include <iostream>
+
+static const int N_PARTICLES = 10;
 
 //--------------------------------------------------------------
 //
 void ofApp::setup() {
   ofSetCircleResolution(50);
-
-  particles = new Particle[N_PARTICLES];
-
+  ofSetFrameRate(60);
   for (int index = 0; index < N_PARTICLES; index++)
-    particles[index] = new Particle(ofGetWidth(), ofGetHeight());
-
-  // v1 *= 25; // scaling
-  // v2 *= 15; // scaling
+    particles.push_back(Particle(ofGetWidth(), ofGetHeight(),
+                                 ofRandom(ofGetWidth()),
+                                 ofRandom(ofGetHeight()), 10.f, 10));
 }
-
 //--------------------------------------------------------------
 void ofApp::update() {
-  for (int index = 0; index < N_PARTICLES; index++)
+  for (int index = 0; index < N_PARTICLES; index++) {
+    for (int inner_i = index + 1; inner_i < N_PARTICLES;
+         inner_i++) // simple collision detection (inaccurate!)
+      if (particles[index].pos.distance(particles[inner_i].pos) <
+          particles[index].radius) {
+        particles[inner_i] = particles[index].collision(particles[inner_i]);
+        // printf("collision!");
+      }
     particles[index].updatePosition();
-  //  if (y2 < 0 || y2 > ofGetHeight())
-  //    v2.y = -v2.y;
-  //  if (x2 < 0 || x2 > ofGetWidth())
-  //    v2.x = -v2.x;
-  //
-  //  x2 = x2 + v2.x; // ofWrap(x + v1.x, 0, ofGetWidth());
-  //  y2 = y2 + v2.y; // ofWrap(y + v1.y, 0, ofGetHeight());
-  //
-  //  if (y < 0 || y > ofGetHeight())
-  //    v1.y = -v1.y;
-  //  if (x < 0 || x > ofGetWidth())
-  //    v1.x = -v1.x;
-  //
-  //  x = x + v1.x; // ofWrap(x + v1.x, 0, ofGetWidth());
-  //  y = y + v1.y; // ofWrap(y + v1.y, 0, ofGetHeight());
+  }
 }
 
 //--------------------------------------------------------------
 void ofApp::draw() {
   ofBackground(100);
   ofSetColor(255);
+
   for (int index = 0; index < N_PARTICLES; index++)
-    ofDrawEllipse(particles[index].x, particles[index].y, 10, 10);
+    ofDrawCircle(particles[index].pos.x, particles[index].pos.y,
+                 particles[index].radius);
 }
 
 //--------------------------------------------------------------
