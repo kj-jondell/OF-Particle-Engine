@@ -13,8 +13,6 @@
 #include <cstdlib>
 #include <iostream>
 
-static const int N_PARTICLES = 8000;
-
 //--------------------------------------------------------------
 //
 void ofApp::setup() {
@@ -23,7 +21,7 @@ void ofApp::setup() {
   for (int index = 0; index < N_PARTICLES; index++)
     particles.push_back(Particle(ofGetWidth(), ofGetHeight(),
                                  ofRandom(ofGetWidth()),
-                                 ofRandom(ofGetHeight()), 5.f, 1));
+                                 ofRandom(ofGetHeight()), INITIAL_VEL, RADIUS));
 }
 //--------------------------------------------------------------
 void ofApp::update() {

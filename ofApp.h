@@ -3,6 +3,10 @@
 #include "Particle.h"
 #include "ofMain.h"
 
+#define N_PARTICLES 8000
+#define INITIAL_VEL 5.f
+#define RADIUS 1
+
 class ofApp : public ofBaseApp {
 public:
   void setup();
