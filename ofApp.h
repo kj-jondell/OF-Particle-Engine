@@ -4,7 +4,7 @@
 #include "ofMain.h"
 
 #define N_PARTICLES 9000
-#define INITIAL_VEL 5.f
+#define INITIAL_VEL 10.f
 #define RADIUS 1
 
 class ofApp : public ofBaseApp {
