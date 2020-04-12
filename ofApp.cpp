@@ -13,7 +13,7 @@
 #include <cstdlib>
 #include <iostream>
 
-static const int N_PARTICLES = 200;
+static const int N_PARTICLES = 8000;
 
 //--------------------------------------------------------------
 //
@@ -23,25 +23,30 @@ void ofApp::setup() {
   for (int index = 0; index < N_PARTICLES; index++)
     particles.push_back(Particle(ofGetWidth(), ofGetHeight(),
                                  ofRandom(ofGetWidth()),
-                                 ofRandom(ofGetHeight()), 1.f, 5));
+                                 ofRandom(ofGetHeight()), 15.f, 1));
 }
 //--------------------------------------------------------------
 void ofApp::update() {
   for (int index = 0; index < N_PARTICLES; index++) {
     for (int inner_i = index + 1; inner_i < N_PARTICLES;
          inner_i++) // simple collision detection (inaccurate!)
-      if (particles[index].pos.distance(particles[inner_i].pos) <=
-          particles[index].radius*2) {
-        particles[inner_i] = particles[index].collision(particles[inner_i]);
-        // printf("collision!");
-      }
+    {
+      float square_dist =
+          particles[index].pos.squareDistance(particles[inner_i].pos);
+      float radius_check = particles[index].radius * 2;
+      if (square_dist <= radius_check * radius_check)
+        if (sqrt(square_dist) <= radius_check)
+          particles[inner_i] = particles[index].collision(particles[inner_i]);
+    }
+    // printf("collision!");
+
     particles[index].updatePosition();
   }
 }
 
 //--------------------------------------------------------------
 void ofApp::draw() {
-  ofBackground(100);
+  ofBackground(10);
   ofSetColor(255);
 
   for (int index = 0; index < N_PARTICLES; index++)
