@@ -23,7 +23,7 @@ void ofApp::setup() {
   for (int index = 0; index < N_PARTICLES; index++)
     particles.push_back(Particle(ofGetWidth(), ofGetHeight(),
                                  ofRandom(ofGetWidth()),
-                                 ofRandom(ofGetHeight()), 15.f, 1));
+                                 ofRandom(ofGetHeight()), 5.f, 1));
 }
 //--------------------------------------------------------------
 void ofApp::update() {
