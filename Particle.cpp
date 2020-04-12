@@ -34,7 +34,7 @@ void Particle::updatePosition() {
   else if (pos.y >= height - radius)
     velocity.y = -abs(velocity.y * 0.9); // bounce vertically
 
-  velocity *= 0.999; // friction
+  velocity *= 0.99999; // friction
 
   // update position
   pos += velocity;
@@ -53,8 +53,11 @@ Particle Particle::collision(Particle other_p) {
   velocity = velocity - vel_difference * normal;
   other_p.velocity = other_p.velocity + vel_difference * normal;
 
-  velocity *= 0.7;         // friction (stickiness!)
-  other_p.velocity *= 0.7; // friction (stickiness!)
+  updatePosition();
+  other_p.updatePosition();
+
+  velocity *= 0.5;         // friction (stickiness!)
+  other_p.velocity *= 0.5; // friction (stickiness!)
 
   return other_p;
 }
