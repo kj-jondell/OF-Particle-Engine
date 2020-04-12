@@ -3,7 +3,7 @@
 #include "Particle.h"
 #include "ofMain.h"
 
-#define N_PARTICLES 8000
+#define N_PARTICLES 9000
 #define INITIAL_VEL 5.f
 #define RADIUS 1
 
