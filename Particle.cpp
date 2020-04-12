@@ -1,45 +1,56 @@
 #include "Particle.h"
 #include <iostream>
+#include <cmath>
+
+using namespace std;
 
 Particle::Particle(int m_width, int m_height, float scaler, int m_radius)
     : width(m_width), height(m_height), radius(m_radius) {
-  velocity.set(ofRandom(-1.f, 1.f) * scaler, ofRandom(-1.f, 1.f) * scaler);
-  pos.y = (float)(m_height / 2);
-  pos.x = (float)(m_width / 2);
-}
+        velocity.set(ofRandom(-1.f, 1.f) * scaler, ofRandom(-1.f, 1.f) * scaler);
+        pos.y = (float)(m_height / 2);
+        pos.x = (float)(m_width / 2);
+    }
 
 Particle::Particle(int m_width, int m_height, float start_x, float start_y,
-                   float scaler, int m_radius)
+        float scaler, int m_radius)
     : width(m_width), height(m_height), radius(m_radius) {
-  velocity.set(ofRandom(-1.f, 1.f) * scaler, ofRandom(-1.f, 1.f) * scaler);
-  pos.x = start_x;
-  pos.y = start_y;
-}
+        velocity.set(ofRandom(-1.f, 1.f) * scaler, ofRandom(-1.f, 1.f) * scaler);
+        pos.x = start_x;
+        pos.y = start_y;
+    }
 
 void Particle::updatePosition() {
-  if (pos.x < radius || pos.x > width - radius)
-    velocity.x = -velocity.x; // bounce horizontally
-  if (pos.y < radius || pos.y > height - radius)
-    velocity.y = -velocity.y; // bounce vertically
+    pos.x = ofClamp(pos.x, radius, width - radius);
+    pos.y = ofClamp(pos.y, radius, height - radius);
 
-  // update position
-  pos += velocity;
+    if (pos.x <= radius)
+        velocity.x = abs(velocity.x*0.99); // bounce horizontally
+    else if (pos.x >= width - radius)
+        velocity.x = -abs(velocity.x*0.99); // bounce horizontally
+    if (pos.y <= radius)
+        velocity.y = abs(velocity.y*0.99); // bounce horizontally
+    else if (pos.y >= height - radius)
+        velocity.y = -abs(velocity.y*0.99); // bounce horizontally
 
-  pos.x = ofClamp(pos.x, radius, width - radius);
-  pos.y = ofClamp(pos.y, radius, height - radius);
+    velocity *= 0.999; //friction
+
+    // update position
+    pos += velocity;
 }
 
 Particle Particle::collision(Particle other_p) {
-  ofVec2f n_velocity =
-      velocity - 0.11 *
-                     ((velocity - other_p.velocity).dot(pos - other_p.pos) /
-                      (pos - other_p.pos).length()) *
-                     (pos - other_p.pos);
-  other_p.velocity = other_p.velocity -
-                     0.11 *
-                         ((other_p.velocity - velocity).dot(other_p.pos - pos) /
-                          (other_p.pos - pos).length()) *
-                         (other_p.pos - pos);
-  velocity = n_velocity;
-  return other_p;
+    ofVec2f normal = pos - other_p.pos;
+    normal.normalize();
+
+    float proj_vel = velocity.dot(normal);
+    float proj_vel_other = other_p.velocity.dot(normal);
+    float vel_difference = proj_vel - proj_vel_other;
+
+    velocity = velocity - vel_difference * normal;
+    other_p.velocity = other_p.velocity + vel_difference * normal;
+
+    velocity *= 0.98; //friction
+    other_p.velocity *= 0.98; //friction 
+
+    return other_p;
 }
