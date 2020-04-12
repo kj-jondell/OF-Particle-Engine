@@ -1,12 +1,12 @@
 /*
- *
- *
  * Simple particle engine
  *
- * TODO: - collision detection
+ * TODO: - process collision only once!
  *   - in-elastic bounce (elastic bounce...)
  *   - implement threads! so that update-function is called more often!
- *   - git shared between mac/linux
+ *   - git shared between mac/linux (DONE!)
+ *   - readme..
+ *
  *
  */
 #include "ofApp.h"
@@ -33,7 +33,7 @@ void ofApp::update() {
           particles[index].pos.squareDistance(particles[inner_i].pos);
       float radius_check = particles[index].radius * 2;
       if (square_dist <= radius_check * radius_check)
-        if (sqrt(square_dist) <= radius_check)
+        if (sqrt(square_dist) <= radius_check) //save cpu by only calling sqrt if closeby!
           particles[inner_i] = particles[index].collision(particles[inner_i]);
     }
     // printf("collision!");
