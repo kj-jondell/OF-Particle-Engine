@@ -53,11 +53,11 @@ Particle Particle::collision(Particle other_p) {
     velocity = velocity - vel_difference * normal;
     other_p.velocity = other_p.velocity + vel_difference * normal;
 
+    velocity *= 0.9;         // friction (stickiness!)
+    other_p.velocity *= 0.9; // friction (stickiness!)
+
     updatePosition();
     other_p.updatePosition();
-
-    velocity *= 0.7;         // friction (stickiness!)
-    other_p.velocity *= 0.7; // friction (stickiness!)
 
     return other_p;
 }

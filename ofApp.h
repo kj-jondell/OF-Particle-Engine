@@ -2,10 +2,12 @@
 
 #include "Particle.h"
 #include "ofMain.h"
+#include "ofxOsc.h"
 
-#define N_PARTICLES 8000
+#define N_PARTICLES 20
 #define INITIAL_VEL 5.f
-#define RADIUS 1
+#define RADIUS 10
+#define OSC_PORT 57121
 
 class ofApp : public ofBaseApp {
   public:
@@ -26,5 +28,6 @@ class ofApp : public ofBaseApp {
     void gotMessage(ofMessage msg);
 
   private:
+    ofxOscSender sender;
     vector<Particle> particles;
 };

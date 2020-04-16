@@ -22,6 +22,8 @@ void ofApp::setup() {
         particles.push_back(
             Particle(ofGetWidth(), ofGetHeight(), ofRandom(ofGetWidth()),
                      ofRandom(ofGetHeight()), INITIAL_VEL, RADIUS));
+
+    sender.setup("localhost", OSC_PORT);
 }
 //--------------------------------------------------------------
 void ofApp::update() {
@@ -35,8 +37,16 @@ void ofApp::update() {
             if (square_dist <= radius_check * radius_check)
                 if (sqrt(square_dist) <=
                     radius_check) // save cpu by only calling sqrt if closeby!
+                {
                     particles[inner_i] =
                         particles[index].collision(particles[inner_i]);
+
+                    ofxOscMessage message;
+                    message.setAddress("/collision");
+                    message.addFloatArg(particles[index].velocity.length());
+                    message.addFloatArg(particles[inner_i].velocity.length());
+                    sender.sendMessage(message);
+                }
         }
         // printf("collision!");
 

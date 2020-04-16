@@ -3,8 +3,7 @@
 
 //========================================================================
 int main() {
-
-    ofSetupOpenGL(1024, 768, OF_FULLSCREEN); // <-------- setup the GL context
+    ofSetupOpenGL(1024, 768, OF_WINDOW); // <-------- setup the GL context
     ofHideCursor();
 
     // this kicks off the running of my app
